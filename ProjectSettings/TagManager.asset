@@ -41,3 +41,12 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: BackGround_Layer
+    uniqueID: 2187639805
+    locked: 0
+  - name: SortingLayer_2
+    uniqueID: 185049649
+    locked: 0
+  - name: SortingLayer_3
+    uniqueID: 2373773647
+    locked: 0
