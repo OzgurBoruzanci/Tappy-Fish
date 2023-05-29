@@ -24,7 +24,20 @@ public class FishManager : MonoBehaviour
 
 
     }
-
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.transform.tag=="Obstacle") 
+        {
+            Debug.Log("/////// Game Over ////////");
+        }
+    }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Obstacle"))
+        {
+            EventManager.Scored();
+        }
+    }
     void MoveUp()
     {
         if (Input.GetMouseButtonDown(0))
