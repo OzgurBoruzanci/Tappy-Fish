@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Obstacle
   - Score
+  - Ground
+  - Column
   layers:
   - Default
   - TransparentFX

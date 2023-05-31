@@ -16,9 +16,11 @@ public class GroundManager : MonoBehaviour
 
     void Update()
     {
-        MoveX();
-        PositionLoop();
-
+        if (!GameManager.gameOver)
+        {
+            MoveX();
+            PositionLoop();
+        }
     }
 
     void MoveX()

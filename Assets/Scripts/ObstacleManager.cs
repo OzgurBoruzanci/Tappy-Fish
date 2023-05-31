@@ -16,8 +16,11 @@ public class ObstacleManager : MonoBehaviour
 
     void Update()
     {
-        MoveX();
-        PositionLoop();
+        if (!GameManager.gameOver)
+        {
+            MoveX();
+            PositionLoop();
+        }
 
     }
 

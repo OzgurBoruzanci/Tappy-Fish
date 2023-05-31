@@ -11,9 +11,16 @@ public class FishManager : MonoBehaviour
     int _angle;
     int _maxAngle = 20;
     int _minAngle = -60;
+    public GameManager gameManager;
+    bool _touchedGround;
+    public Sprite fishDied;
+    SpriteRenderer _sp;
+    Animator _animator;
     void Start()
     {
         _rb = GetComponent<Rigidbody2D>();
+        _sp= GetComponent<SpriteRenderer>();
+        _animator = GetComponent<Animator>();
     }
 
     void Update()
@@ -26,22 +33,47 @@ public class FishManager : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.transform.tag=="Obstacle") 
+        if (collision.gameObject.CompareTag("Ground"))
         {
-            Debug.Log("/////// Game Over ////////");
+            if (GameManager.gameOver==false)
+            {
+                gameManager.GameOver();
+                GameOver();
+            }
+            else
+            {
+
+            }
+        }
+
+        if (collision.gameObject.CompareTag("Obstacle"))
+        {
+            EventManager.Scored();
+        }
+        else if (collision.gameObject.CompareTag("Column"))
+        {
+            gameManager.GameOver();
+            GameOver();
         }
     }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Obstacle"))
         {
             EventManager.Scored();
         }
+        else if (collision.CompareTag("Column"))
+        {
+            gameManager.GameOver();
+            GameOver();
+        }
     }
     void MoveUp()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && !GameManager.gameOver)
         {
+            _rb.velocity = Vector2.zero;
             _rb.velocity = new Vector2(_rb.velocity.x, _speed);
         }
     }
@@ -68,6 +100,17 @@ public class FishManager : MonoBehaviour
                 _angle -= 2;
             }
         }
-        transform.rotation = Quaternion.Euler(0, 0, _angle);
+        if (!_touchedGround)
+        {
+            transform.rotation = Quaternion.Euler(0, 0, _angle);
+        }
+    }
+
+    void GameOver()
+    {
+        _touchedGround = true;
+        _sp.sprite = fishDied;
+        _animator.enabled = false;
+        transform.rotation = Quaternion.Euler(0, 0, -90);
     }
 }
