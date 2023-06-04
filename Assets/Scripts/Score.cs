@@ -7,6 +7,7 @@ public class Score : MonoBehaviour
     public Text scoreText;
     public Text panelScore;
     public Text panelHighScore;
+    public GameObject New;
     int _score = 0;
     int _highScore;
 
@@ -38,12 +39,12 @@ public class Score : MonoBehaviour
             _highScore=_score;
             panelHighScore.text = _highScore.ToString() + " ";
             PlayerPrefs.SetInt("HighScore", _highScore);
+            New.SetActive(true);
         }
     }
 
-    // Update is called once per frame
-    void Update()
+    public int GetScore()
     {
-        
+        return _score;
     }
 }

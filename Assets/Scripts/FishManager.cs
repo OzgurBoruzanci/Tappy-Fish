@@ -14,11 +14,14 @@ public class FishManager : MonoBehaviour
     public GameManager gameManager;
     bool _touchedGround;
     public Sprite fishDied;
+    public ObstacleSpawner obstacleSpawner;
     SpriteRenderer _sp;
     Animator _animator;
+    [SerializeField] AudioSource _swimSound, _pointSound, _hitSound;
     void Start()
     {
         _rb = GetComponent<Rigidbody2D>();
+        _rb.gravityScale = 0;
         _sp= GetComponent<SpriteRenderer>();
         _animator = GetComponent<Animator>();
     }
@@ -40,20 +43,6 @@ public class FishManager : MonoBehaviour
                 gameManager.GameOver();
                 GameOver();
             }
-            else
-            {
-
-            }
-        }
-
-        if (collision.gameObject.CompareTag("Obstacle"))
-        {
-            EventManager.Scored();
-        }
-        else if (collision.gameObject.CompareTag("Column"))
-        {
-            gameManager.GameOver();
-            GameOver();
         }
     }
 
@@ -62,8 +51,9 @@ public class FishManager : MonoBehaviour
         if (collision.CompareTag("Obstacle"))
         {
             EventManager.Scored();
+            _pointSound.Play();
         }
-        else if (collision.CompareTag("Column"))
+        else if (collision.CompareTag("Column") && !GameManager.gameOver)
         {
             gameManager.GameOver();
             GameOver();
@@ -73,8 +63,20 @@ public class FishManager : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0) && !GameManager.gameOver)
         {
-            _rb.velocity = Vector2.zero;
-            _rb.velocity = new Vector2(_rb.velocity.x, _speed);
+            _swimSound.Play();
+            if (!GameManager.gameStarted)
+            {
+                _rb.gravityScale = 2f;
+                _rb.velocity = Vector2.zero;
+                _rb.velocity = new Vector2(_rb.velocity.x, _speed);
+                obstacleSpawner.InstantiateObstacle();
+                gameManager.GameHasStarted();
+            }
+            else
+            {
+                _rb.velocity = Vector2.zero;
+                _rb.velocity = new Vector2(_rb.velocity.x, _speed);
+            }
         }
     }
 
@@ -106,11 +108,17 @@ public class FishManager : MonoBehaviour
         }
     }
 
+    void FishDiedEffect()
+    {
+        _hitSound.Play();
+    }
+
     void GameOver()
     {
         _touchedGround = true;
         _sp.sprite = fishDied;
         _animator.enabled = false;
         transform.rotation = Quaternion.Euler(0, 0, -90);
+        FishDiedEffect();
     }
 }
